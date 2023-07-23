@@ -1,0 +1,24 @@
+from pydoc import render_doc
+from tkinter import E
+from django.shortcuts import render
+from products.models import Product
+
+
+
+
+def get_product(request , slug):
+    try:
+        product = Product.objects.get(slug =slug)
+        context = {'product' : product}
+        if request.Get.get('size'):
+            size = request.Get.get('size')
+            price = product.get_product_price_by_size().price
+            context['selected_size'] = size
+            context['updated_price'] = price
+            print(price)
+
+
+        return render(request  , 'product/product.html' , context = context)
+
+    except Exception as e:
+        print(e)
