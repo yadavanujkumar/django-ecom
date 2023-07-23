@@ -55,10 +55,6 @@ class Product(BaseModel):
     def __str__(self) -> str:
         return self.product_name
 
-    def get_product_price_by_size(self, size):
-        return self.price + SizeVariant.objects.get(size_name=size)
-        
-
 
 
 
