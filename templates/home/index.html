@@ -1,9 +1,30 @@
 {% extends "base/base.html"%}
 
 {%  block start %}
+<style>
+    #preloader
+    {
+    background: #000 url(./public/static/images/gif) no-repeat center center ;
+	background-size: 20%;
+	height: 100vh;
+	width: 100%;
+	position: fixed;
+	z-index:100;
 
+    
+    }
+    .notLoaded {
+        height: 100vh;
+        overflow: hidden;
+        position: fixed;
+        margin: 0px;
+    }
+   /* # .container mt-5 pt-5{
+        background-image: url({}"/public/static/images/bg.jpeg");
+    } */
+    </style>
 
-<div class="container mt-5 pt-5">
+<div class="container mt-5 pt-5" >
     <div class="row">
         
         {% for product in products %}
@@ -17,6 +38,16 @@
                 </figcaption>
             </figure> <!-- card // -->
         </div> <!-- col.// -->
+        <script>
+            function fadeout(){
+                $('#loader').delay(100000).fadeOut('slow'),function(){$('.notLoaded' ) .removeClass('notLoaded');
+            }
+        }
+            var loader= document.getElementById("preloader");
+            window.addEventListener("load", function() {
+            loader.style.display = "none";
+            })
+            </script>
 
         {% endfor %}
       
