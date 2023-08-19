@@ -44,7 +44,7 @@ $(document).ready(function() {
 		<nav class="navbar navbar-dark navbar-expand p-0 bg-dark">
 		<div class="container">
 			<ul class="navbar-nav d-none d-md-flex mr-auto">
-				<li class="nav-item"><a class="nav-link" href="#">Home</a></li>
+				<li class="nav-item"><a class="nav-link" href="http://127.0.0.1:8000/">Home</a></li>
 				<li class="nav-item"><a class="nav-link" href="#">Delivery</a></li>
 				<li class="nav-item"><a class="nav-link" href="#">Payment</a></li>
 			</ul>
@@ -91,10 +91,10 @@ $(document).ready(function() {
 					<div class="widget-header icontext">
 						<a href="#" class="icon icon-sm rounded-circle border"><i class="fa fa-user"></i></a>
 						<div class="text">
-							<span class="text-muted">Welcome!</span>
+							<span class="text-muted">Welcome!{{User.user}}</span>
 							<div> 
-								<a href="#">Sign in</a> |  
-								<a href="#"> Register</a>
+								<a href="http://127.0.0.1:8000/accounts/login/">Sign in</a> |  
+								<a href="http://127.0.0.1:8000/accounts/register/"> Register</a>
 							</div>
 						</div>
 					</div>
