@@ -21,14 +21,20 @@ def get_product(request , slug):
 
 
 
-def add_to_cart(request, slug):
-    variant = request.GET.get('variant')
-   
+def add_to_cart(request, uid):
+    variant = request.GET.get('variant') 
+
     product =  Product.objects.get(slug = slug)
     user = request.user
     cart , _ = Cart.objects.get_or_create(user = user , is_paid = False)
+    cart_items = CartItems.objects.create(cart = cart , product= product, )
+    if variant:
+        variant = request.Get.get('variant')
+        size_variant = SizeVariant.objects.get(name = variant )
+        cart_items.size_variant = size_variant
+        cart_items.save()
 
-    return redirect('/')
+    return HttpResponseRedirect(request.path_info)
 
   #  except Exception as e:
  #       print(e)
