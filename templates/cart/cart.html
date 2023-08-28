@@ -1,0 +1,12 @@
+<!-- cart.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1>Your Cart</h1>
+  <ul>
+    {% for item in cart.items.all %}
+      <li>{{ item.product.name }} - {{ item.quantity }} x {{ item.product.price }} = {{ item.subtotal }}</li>
+    {% endfor %}
+  </ul>
+  <p>Total: {{ cart.items.all|length }} items, ${{ cart.total }}</p>
+{% endblock %}
