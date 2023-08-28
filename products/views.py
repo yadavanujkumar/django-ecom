@@ -2,7 +2,7 @@ from pydoc import render_doc
 from tkinter import E
 from django.shortcuts import render
 from products.models import Product
-
+from accounts.models import Cart , CartItems
 
 
 
@@ -18,6 +18,17 @@ def get_product(request , slug):
             print(price)
              
         return render(request  , 'product/product.html' , context = context )
+
+
+
+def add_to_cart(request, slug):
+    variant = request.GET.get('variant')
+   
+    product =  Product.objects.get(slug = slug)
+    user = request.user
+    cart , _ = Cart.objects.get_or_create(user = user , is_paid = False)
+
+    return redirect('/')
 
   #  except Exception as e:
  #       print(e)

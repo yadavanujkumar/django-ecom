@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     'products',
     'accounts',
     'home'
-    'Cart'
+   
 ]
 
 MIDDLEWARE = [
@@ -149,13 +149,6 @@ EMAIL_USE_TLS = True
 EMAIL_PORT = 587
 EMAIL_HOST_USER = 'thunderstruck9999@gmail.com'
 EMAIL_HOST_PASSWORD = 'eddfpecaxcodoqfo'
-
-
-
-
-
-
-
 
 
 
