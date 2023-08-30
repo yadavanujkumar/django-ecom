@@ -7,6 +7,8 @@ from django.dispatch import receiver
 import uuid
 from base.emails import send_account_activation_email
 from products.models import Product
+from products.models import ColorVariant
+from products.models import SizeVariant
 
 class Profile(BaseModel):
     user = models.OneToOneField(User , on_delete=models.CASCADE , related_name="profile")
