@@ -19,10 +19,10 @@ class Profile(BaseModel):
 
 class Cart(BaseModel):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='carts')
-    is_paid= models.BooleanField(default=False)
+    is_paid = models.BooleanField(default=False)
 
 class CartItems(BaseModel):
-    cart = models.ForeignKey(Cart , on_delete=models.CASCADE , related_name='cart_items')
+    cart = models.ForeignKey(Cart , on_delete=models.CASCADE , related_name="cart_items")
     product = models.ForeignKey(Product , on_delete=models.SET_NULL, null=True, blank=True)
     color_variant = models.ForeignKey(ColorVariant, on_delete=models.SET_NULL, null=True, blank=True)
     size_variant = models.ForeignKey(SizeVariant, on_delete=models.SET_NULL, null=True, blank=True)
