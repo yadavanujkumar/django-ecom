@@ -1,5 +1,4 @@
-from pydoc import render_doc
-from tkinter import E
+
 from django.shortcuts import render
 from products.models import Product
 from accounts.models import Cart , CartItems
@@ -28,14 +27,14 @@ def add_to_cart(request, uid):
     product =  Product.objects.get(uid= uid)
     user = request.user
     cart , _ = Cart.objects.get_or_create(user = user , is_paid = False)
-    cart_item = CartItems.objects.create(cart = cart , product= product )
+    cart_item = CartItems.objects.create(cart = cart , product = product )
     if variant:
         variant = request.Get.get('variant')
         size_variant = SizeVariant.objects.get(size_name = variant )
-        cart_items.size_variant = size_variant
-        cart_items.save()
+        cart_item.size_variant = size_variant
+        cart_item.save()
     print("doneeee")
-    return HttpResponseRedirect(request.path_info)
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER')) 
 
   #  except Exception as e:
  #       print(e)
