@@ -16,6 +16,9 @@ class Profile(BaseModel):
     email_token = models.CharField(max_length=100 , null=True , blank=True)
     profile_image = models.ImageField(upload_to = 'profile')
 
+    def get_cart_count(self):
+        return CartItems.objects.filter(cart__is_paid = False , cart__user = self.user).count()
+
 
 class Cart(BaseModel):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='carts')
