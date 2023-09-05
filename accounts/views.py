@@ -5,6 +5,10 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate , login , logout
 from django.http import HttpResponseRedirect,HttpResponse
+from accounts.models import Cart, CartItems
+from django.core.exceptions import ObjectDoesNotExist
+
+from products.models import *
 # Create your views here.
 from .models import Profile
 
@@ -75,3 +79,44 @@ def activate_email(request , email_token):
         return redirect('/')
     except Exception as e:
         return HttpResponse('Invalid Email token')
+
+def add_to_cart(request, uid):
+    try:
+        variant = request.GET.get('variant') 
+
+        product = Product.objects.get(uid=uid)
+        user = request.user
+        cart, _ = Cart.objects.get_or_create(user=user, is_paid=False)
+        cart_item = CartItems.objects.create(cart=cart, product=product)
+        
+        if variant:
+            variant = request.GET.get('variant')
+            size_variant = SizeVariant.objects.get(size_name=variant)
+            cart_item.size_variant = size_variant
+            cart_item.save()
+        
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    except Exception as e:
+        # Handle other exceptions or errors here
+        print(e)
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+def remove_cart(request , cart_item_uid):
+    try:
+         cart_item = CartItems.objects.get(uid= cart_item_uid)
+         cart_item.delete()
+    except Exception as e:
+        print(e)
+    
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
+def cart(request):
+    try:
+        cart = Cart.objects.get(is_paid=False, user=request.user)
+    except ObjectDoesNotExist:
+        # If no cart matching the conditions is found, create an empty cart.
+        cart = None
+    
+    context = {'cart': cart}
+    return render(request, 'accounts/cart.html', context)
