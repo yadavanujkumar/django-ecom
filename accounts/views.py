@@ -113,10 +113,12 @@ def remove_cart(request , cart_item_uid):
 
 def cart(request):
     try:
-        cart = Cart.objects.get(is_paid=False, user=request.user)
+        user_cart = Cart.objects.get(is_paid=False, user=request.user)
     except ObjectDoesNotExist:
         # If no cart matching the conditions is found, create an empty cart.
-        cart = None
+        user_cart = None
     
-    context = {'cart': cart}
+    cart_total = user_cart.get_cart_total() if user_cart else 0  # Calculate the total or set it to 0 if cart is None
+    
+    context = {'user_cart': user_cart, 'cart_total': cart_total}
     return render(request, 'accounts/cart.html', context)
