@@ -1,3 +1,9 @@
+{% if cart %}
+    <p>Cart exists: {{ cart }}</p>
+{% else %}
+    <p>Cart does not exist</p>
+{% endif %}
+
 {% extends 'base/base.html' %}  
 
 {% block start %}
@@ -105,7 +111,7 @@ Delivery within 1-2 weeks
 <dl class="dlist-align">
     <dt>Total price:</dt>
     <dd class="text-right">
-        USD {{cart.get_cart_total}}
+        USD {{ cart.get_cart_total|floatformat:2 }}
     </dd>
 </dl>
 <dl class="dlist-align">
