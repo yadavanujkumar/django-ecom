@@ -119,6 +119,21 @@ def cart(request):
         user_cart = None
     
     cart_total = user_cart.get_cart_total() if user_cart else 0  # Calculate the total or set it to 0 if cart is None
-    
+    if request.method == 'POST':
+        coupon =  request.POST.get('coupon')
+        coupon_obj = Coupon.objects.filter(coupon_code__icontains_=_coupon)
+        if not coupon_obj.exists():
+            messages.warning(request, 'Invalid Coupon brooo')
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+        if user_cart.coupon:
+            messages.warning(request, 'Coupon already exists brooooo ')
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+        user_cart.coupon = coupon_obj[0]
+        user_cart.save() 
+        messages.success(request, 'Coupon used ')
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
     context = {'user_cart': user_cart, 'cart_total': cart_total}
     return render(request, 'accounts/cart.html', context)

@@ -9,6 +9,7 @@ from base.emails import send_account_activation_email
 from products.models import Product
 from products.models import ColorVariant
 from products.models import SizeVariant
+from products.models import Coupon
 
 class Profile(BaseModel):
     user = models.OneToOneField(User , on_delete=models.CASCADE , related_name="profile")
@@ -22,6 +23,7 @@ class Profile(BaseModel):
 
 class Cart(BaseModel):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='carts')
+    coupon = models.ForeignKey(Coupon , on_delete=models.SET_NULL , null=True , blank=True)
     is_paid = models.BooleanField(default=False)
 
     def get_cart_total(self):
