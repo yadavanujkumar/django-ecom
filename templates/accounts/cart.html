@@ -5,28 +5,19 @@
 
 
 <tbody>
-    {% for cart_item in cart.cart_items.all %}
+    {% for cart_item in user_cart.cart_items.all %}
     <tr>
         <td>
-            <figure class="itemside">
-                <div class="aside">
-                    <img
-                        src="/media/{{cart_item.product.product_images.first.image }}"
-                        class="img-sm" />
-                </div>
-
-                <figcaption class="info">
-                    <a href="" class="title text-dark">{{cart_item.product.product_name}}</a>
-                    {% if cart_item.size_variant %}
-                    <p class="text-muted small">
-                        Size:
-                        {{cart_item.size_variant.Size_name}}
-                        <br />
-                        Brand: Gucci
-                    </p>
-                    {% endif %}
-                </figcaption>
-            </figure>
+            <!-- Display product image, name, size, etc. here -->
+            <img src="/media/{{cart_item.product.product_images.first.image }}" class="img-sm" />
+            <a href="#">{{cart_item.product.product_name}}</a>
+            {% if cart_item.size_variant %}
+                <p class="text-muted small">
+                    Size: {{cart_item.size_variant}}
+                    <br />
+                    Brand: {{cart_item.product}}
+                </p>
+            {% endif %}
         </td>
         <td>
             <select class="form-control">
@@ -38,32 +29,26 @@
         </td>
         <td>
             <div class="price-wrap">
-                <var class="price"
-                    >${{cart_item.get_product_price}}.00</var
-                >
+                <var class="price">${{cart_item.get_product_price}}.00</var>
             </div>
-            <!-- price-wrap .// -->
         </td>
         <td class="text-right">
-            <a
-                data-original-title="Save to Wishlist"
-                title=""
-                href=""
-                class="btn btn-light" 
-                data-toggle="tooltip">
-                <i class="fa fa-heart"></i></a>
-            <a href="{% url 'remove_cart' cart_item.uid %}"class="btn btn-light"> Remove</a>
+            <a data-original-title="Save to Wishlist" title="" href="" class="btn btn-light" data-toggle="tooltip">
+                <i class="fa fa-heart"></i>
+            </a>
+            <a href="{% url 'remove_cart' cart_item.uid %}" class="btn btn-light">Remove</a>
         </td>
     </tr>
     {% endfor %}
 </tbody>
+
 </table>
 
 <div class="card-body border-top">
 <a href="#" class="btn btn-primary float-md-right">
     Make Purchase <i class="fa fa-chevron-right"></i>
 </a>
-<a href="{% url 'home' %}" class="btn btn-light">
+<a href="{% url 'login' %}" class="btn btn-light">
     <i class="fa fa-chevron-left"></i> Continue shopping</a>
 </div>
 </div>
