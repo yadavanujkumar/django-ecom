@@ -5,7 +5,8 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate , login , logout
 from django.http import HttpResponseRedirect,HttpResponse
-from accounts.models import Cart, CartItems
+from accounts.models import Cart, CartItems 
+#from products.models import minimum_amount, is_expired
 from django.core.exceptions import ObjectDoesNotExist
 
 from products.models import *
@@ -130,10 +131,28 @@ def cart(request):
             messages.warning(request, 'Coupon already exists brooooo ')
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
+        if user_cart.get_cart_total() < coupon_obj[0].minimum_amount:
+            messages.warning(request, f'Amount should be greate than{coupon_obj.minimum_amount} ')
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+        if coupon_obj[0].is_expired:
+            messages.warning(request, f'Coupon experied ')
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
+
         user_cart.coupon = coupon_obj[0]
         user_cart.save() 
+
         messages.success(request, 'Coupon used ')
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
     context = {'user_cart': user_cart, 'cart_total': cart_total}
     return render(request, 'accounts/cart.html', context)
+
+def remove_coupon(request, cart_id):
+    cart =  Cart.objects.get(uid=cart_id)
+    cart.coupon = None
+    cart.save()
+    messages.success(request, 'Coupon Removed ')
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))

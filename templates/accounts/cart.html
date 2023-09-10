@@ -78,6 +78,9 @@ Delivery within 1-2 weeks
             </span>
         </div>
     </div>
+    {% if cart.coupon %}
+    <a href="{% url 'remove_coupon' cart.uid %}" class="btn btn-success">{{ cart.coupon.coupon_code }}</a>
+    {% endif %}
 </form>
 </div>
 <!-- card-body.// -->

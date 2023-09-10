@@ -37,7 +37,12 @@ class Cart(BaseModel):
             if cart_item.size_variant:
                 size_variant_price = cart_item.size_variant.price
                 price.append(size_variant_price)
-        print(price)
+        
+        
+        if self.coupon:
+            if self.coupon.minimum_amount < sum(price):
+                return sum(price) - self.coupon.discount_price
+        
         return sum(price)
 
 
