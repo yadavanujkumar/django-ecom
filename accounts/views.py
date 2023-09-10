@@ -121,7 +121,7 @@ def cart(request):
     cart_total = user_cart.get_cart_total() if user_cart else 0  # Calculate the total or set it to 0 if cart is None
     if request.method == 'POST':
         coupon =  request.POST.get('coupon')
-        coupon_obj = Coupon.objects.filter(coupon_code__icontains_=_coupon)
+        coupon_obj = Coupon.objects.filter(coupon_code__icontains=coupon)
         if not coupon_obj.exists():
             messages.warning(request, 'Invalid Coupon brooo')
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))

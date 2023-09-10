@@ -68,7 +68,7 @@ Delivery within 1-2 weeks
 <div class="card-body">
 <form method="POST">
     {% csrf_token %}
-    { % include 'base/alert.html' %}
+    {% include 'base/alert.html' %}
     <div class="form-group">
         <label>Have coupon?</label>
         <div class="input-group">
