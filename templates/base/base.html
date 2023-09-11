@@ -1,6 +1,88 @@
 <!DOCTYPE HTML>
 <html lang="en">
 <head>
+    <style>
+        /* Global Styles */
+        body {
+          font-family: Arial, sans-serif;
+          background-color: #f8f8f8;
+          margin: 0;
+          padding: 0;
+        }
+      
+        /* Header Styles */
+        .navbar {
+          background-color: #343a40;
+        }
+      
+        .navbar a {
+          color: #fff;
+        }
+      
+        .navbar .navbar-nav .nav-item .nav-link:hover {
+          color: #17a2b8;
+        }
+      
+        .logo {
+          max-width: 100%;
+          height: auto;
+        }
+      
+        /* Search Form Styles */
+        .search {
+          margin-top: 10px;
+        }
+      
+        /* Cart and User Icons Styles */
+        .widget-header a {
+          color: #333;
+          text-decoration: none;
+          font-size: 18px;
+        }
+      
+        .widget-header .icon {
+          background-color: #fff;
+          color: #333;
+        }
+      
+        .badge.notify {
+          background-color: #dc3545;
+        }
+      
+        /* Main Content Styles */
+        .section-content {
+          padding: 20px 0;
+        }
+      
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+          .navbar-expand {
+            flex-flow: column nowrap;
+            align-items: flex-start;
+          }
+      
+          .navbar-collapse {
+            background-color: #343a40;
+          }
+      
+          .navbar-collapse.show {
+            background-color: #343a40;
+          }
+      
+          .navbar .navbar-nav {
+            padding-top: 10px;
+          }
+      
+          .navbar .navbar-nav .nav-item {
+            margin-bottom: 10px;
+          }
+      
+          .navbar .navbar-nav .nav-item:last-child {
+            margin-bottom: 0;
+          }
+        }
+      </style>
+      
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
@@ -30,7 +112,7 @@
 
 // jquery ready start
 $(document).ready(function() {
-	// jQuery code
+    // jQuery code
 
 }); 
 // jquery end
@@ -39,77 +121,84 @@ $(document).ready(function() {
 </head>
 <body>
 
-	<header class="section-header">
+    <header class="section-header">
 
-		<nav class="navbar navbar-dark navbar-expand p-0 bg-dark">
-		<div class="container">
-			<ul class="navbar-nav d-none d-md-flex mr-auto">
-				<li class="nav-item"><a class="nav-link" href="http://127.0.0.1:8000/">Home</a></li>
-				<li class="nav-item"><a class="nav-link" href="#">Delivery</a></li>
-				<li class="nav-item"><a class="nav-link" href="#">Payment</a></li>
-			</ul>
-			<ul class="navbar-nav">
-				<li class="nav-item"><a href="#" class="nav-link"> Call: +99812345678 </a></li>
-				<li class="nav-item dropdown">
-					 <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown"> English </a>
-					<ul class="dropdown-menu dropdown-menu-right" style="max-width: 100px;">
-						<li><a class="dropdown-item" href="#">Arabic</a></li>
-						<li><a class="dropdown-item" href="#">Russian </a></li>
-					</ul>
-				</li>
-			</ul> <!-- list-inline //  -->
-		  </div> <!-- navbar-collapse .// -->
-		 <!-- container //  -->
-		</nav> <!-- header-top-light.// -->
-		
-		<section class="header-main border-bottom">
-			<div class="container">
-		<div class="row align-items-center">
-			<div class="col-lg-2 col-4">
-				<div class="brand-wrap">
-					<img class="logo" src="public/static/images/logo.png">
-				</div> <!-- brand-wrap.// -->
-			</div>
-			<div class="col-lg-6 col-sm-12">
-				<form action="#" class="search">
-					<div class="input-group w-100">
-						<input type="text" class="form-control" placeholder="Search">
-						<div class="input-group-append">
-						  <button class="btn btn-primary" type="submit">
-							<i class="fa fa-search"></i>
-						  </button>
-						</div>
-					</div>
-				</form> <!-- search-wrap .end// -->
-			</div> <!-- col.// -->
-			<div class="col-lg-4 col-sm-6 col-8">
-				<div class="widgets-wrap float-md-right">
-					<div class="widget-header  mr-3">
-						<a href="{% url 'cart' %}" class="icon icon-sm rounded-circle border"><i class="fa fa-shopping-cart"></i></a>
-						<span class="badge badge-pill badge-danger notify">{{request.user.profile.get_cart_count}}</span>
-					</div>
-					<div class="widget-header icontext">
-						<a href="#" class="icon icon-sm rounded-circle border"><i class="fa fa-user"></i></a>
-						<div class="text">
-							<span class="text-muted">Welcome!</span>
-							<div> 
-								<a href="{% url 'login' %}">Sign in</a> |  
-								<a href="{% url 'register' %}"> Register</a>
-							</div>
-						</div>
-					</div>
-				</div> <!-- widgets-wrap.// -->
-			</div> <!-- col.// -->
-		</div> <!-- row.// -->
-			</div> <!-- container.// -->
-		</section> <!-- header-main .// -->
-		</header>
+        <nav class="navbar navbar-dark navbar-expand p-0 bg-dark">
+        <div class="container">
+            <ul class="navbar-nav d-none d-md-flex mr-auto">
+                <li class="nav-item"><a class="nav-link" href="http://127.0.0.1:8000/">Home</a></li>
+                <li class="nav-item"><a class="nav-link" href="#">Delivery</a></li>
+                <li class="nav-item"><a class="nav-link" href="#">Payment</a></li>
+            </ul>
+            <ul class="navbar-nav">
+                <li class="nav-item"><a href="#" class="nav-link"> Call: +99812345678 </a></li>
+                <li class="nav-item dropdown">
+                     <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown"> English </a>
+                    <ul class="dropdown-menu dropdown-menu-right" style="max-width: 100px;">
+                        <li><a class="dropdown-item" href="#">Arabic</a></li>
+                        <li><a class="dropdown-item" href="#">Russian </a></li>
+                    </ul>
+                </li>
+            </ul> <!-- list-inline //  -->
+          </div> <!-- navbar-collapse .// -->
+         <!-- container //  -->
+        </nav> <!-- header-top-light.// -->
+        
+        <section class="header-main border-bottom">
+            <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-2 col-4">
+                <div class="brand-wrap">
+                    <img class="logo" src="public/static/images/logo.png">
+                </div> <!-- brand-wrap.// -->
+            </div>
+            <div class="col-lg-6 col-sm-12">
+                <form action="#" class="search">
+                    <div class="input-group w-100">
+                        <input type="text" class="form-control" placeholder="Search">
+                        <div class="input-group-append">
+                          <button class="btn btn-primary" type="submit">
+                            <i class="fa fa-search"></i>
+                          </button>
+                        </div>
+                    </div>
+                </form> <!-- search-wrap .end// -->
+            </div> <!-- col.// -->
+            <div class="col-lg-4 col-sm-6 col-8">
+                <div class="widgets-wrap float-md-right">
+                    <div class="widget-header mr-3">
+                        <a href="{% url 'cart' %}" class="icon icon-sm rounded-circle border"><i class="fa fa-shopping-cart"></i></a>
+                        <span class="badge badge-pill badge-danger notify">{{ request.user.profile.get_cart_count }}</span>
+                    </div>
+                    
+                    <div class="widget-header icontext">
+                        <a href="#" class="icon icon-sm rounded-circle border"><i class="fa fa-user"></i></a>
+                        <div class="text">
+                            <span class="text-muted">Welcome!</span>
+                            <div>
+                                {% if user.is_authenticated %}
+                                    <span>{{ user.username }}!</span> |
+                                    <a href="{% url 'logout' %}">Logout</a>
+                                {% else %}
+                                    <a href="{% url 'login' %}">Sign in</a> |
+                                    <a href="{% url 'register' %}">Register</a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div> <!-- widgets-wrap.// -->
+            </div> <!-- col.// -->
+        </div> <!-- row.// -->
+            </div> <!-- container.// -->
+        </section> <!-- header-main .// -->
+        </header>
 
 
 
-		{% block start %}
+        {% block start %}
 
-		{% endblock %}
+        {% endblock %}
 
 
 
@@ -122,4 +211,3 @@ $(document).ready(function() {
 
         </body>
         </html>
-        

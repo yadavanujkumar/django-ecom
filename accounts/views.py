@@ -2,7 +2,7 @@ from cmath import log
 from tkinter import E
 from django.shortcuts import redirect, render
 from django.contrib import messages
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, auth
 from django.contrib.auth import authenticate , login , logout
 from django.http import HttpResponseRedirect,HttpResponse
 from accounts.models import Cart, CartItems 
@@ -42,6 +42,15 @@ def login_page(request):
 
 
     return render(request ,'accounts/login.html')
+
+def logout(request, *args, **kwargs):
+    try:
+        print(request.user)
+        auth.logout(request)
+        print("loged out: ", request.user)
+    except Exception as e:
+        print(e)
+    return redirect('login')
 
 
 def register_page(request):
@@ -131,12 +140,12 @@ def cart(request):
             messages.warning(request, 'Coupon already exists brooooo ')
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
-        if user_cart.get_cart_total() < coupon_obj[0].minimum_amount:
-            messages.warning(request, f'Amount should be greate than{coupon_obj.minimum_amount} ')
+        if user_cart.get_cart_total() < coupon_obj.minimum_amount:
+            messages.warning(request, f'Amount should be greater than  {coupon_obj.minimum_amount}')
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
         if coupon_obj[0].is_expired:
-            messages.warning(request, f'Coupon experied ')
+            messages.warning(request, 'Coupon experied ')
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 

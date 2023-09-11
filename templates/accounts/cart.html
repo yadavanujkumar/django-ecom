@@ -1,123 +1,114 @@
-
 {% extends 'base/base.html' %}  
 
 {% block start %}
-
-
-<tbody>
-    {% for cart_item in user_cart.cart_items.all %}
-    <tr>
-        <td>
-            <!-- Display product image, name, size, etc. here -->
-            <img src="/media/{{cart_item.product.product_images.first.image }}" class="img-sm" />
-            <a href="#">{{cart_item.product.product_name}}</a>
-            {% if cart_item.size_variant %}
-                <p class="text-muted small">
-                    Size: {{cart_item.size_variant}}
-                    <br />
-                    Brand: {{cart_item.product}}
-                </p>
-            {% endif %}
-        </td>
-        <td>
-            <select class="form-control">
+<div class="container">
+  <div class="row">
+    <div class="col-md-9">
+      <table class="table table-hover shopping-cart-wrap">
+        <thead class="text-muted">
+          <tr>
+            <th scope="col">Product</th>
+            <th scope="col" width="120">Quantity</th>
+            <th scope="col" width="120">Price</th>
+            <th scope="col" class="text-right" width="200">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for cart_item in user_cart.cart_items.all %}
+          <tr>
+            <td>
+              <figure class="media">
+                <div class="img-wrap"><img src="/media/{{ cart_item.product.product_images.first.image }}" class="img-thumbnail img-sm"></div>
+                <figcaption class="media-body">
+                  <h6 class="title text-truncate">{{ cart_item.product.product_name }}</h6>
+                  {% if cart_item.size_variant %}
+                  <dl class="dlist-align small">
+                    <dt>Size:</dt>
+                    <dd>{{ cart_item.size_variant }}</dd>
+                  </dl>
+                  <dl class="dlist-align small">
+                    <dt>Brand:</dt>
+                    <dd>{{ cart_item.product.brand }}</dd>
+                  </dl>
+                  {% endif %}
+                </figcaption>
+              </figure>
+            </td>
+            <td> 
+              <select class="form-control" style="width: auto;">
+                <option selected>{{ cart_item.quantity }}</option>
                 <option>1</option>
                 <option>2</option>
                 <option>3</option>
                 <option>4</option>
-            </select>
-        </td>
-        <td>
-            <div class="price-wrap">
-                <var class="price">${{cart_item.get_product_price}}.00</var>
-            </div>
-        </td>
-        <td class="text-right">
-            <a data-original-title="Save to Wishlist" title="" href="" class="btn btn-light" data-toggle="tooltip">
+              </select> 
+            </td>
+            <td>
+              <div class="price-wrap">
+                <var class="price">₹{{ cart_item.get_product_price }}</var>
+              </div> <!-- price-wrap .// -->
+            </td>
+            <td class="text-right">
+              <a data-original-title="Save to Wishlist" title="" href="" class="btn btn-light" data-toggle="tooltip">
                 <i class="fa fa-heart"></i>
-            </a>
-            <a href="{% url 'remove_cart' cart_item.uid %}" class="btn btn-light">Remove</a>
-        </td>
-    </tr>
-    {% endfor %}
-</tbody>
-
-</table>
-
-<div class="card-body border-top">
-<a href="#" class="btn btn-primary float-md-right">
-    Make Purchase <i class="fa fa-chevron-right"></i>
-</a>
-<a href="{% url 'login' %}" class="btn btn-light">
-    <i class="fa fa-chevron-left"></i> Continue shopping</a>
-</div>
-</div>
-<!-- card.// -->
-
-<div class="alert alert-success mt-3">
-<p class="icontext">
-<i class="icon text-success fa fa-truck"></i> 
-Free
-Delivery within 1-2 weeks
-</p>
-</div>
-</main>
-<!-- col.// -->
-<aside class="col-md-3">
-<div class="card mb-3">
-<div class="card-body">
-<form method="POST">
-    {% csrf_token %}
-    {% include 'base/alert.html' %}
-    <div class="form-group">
-        <label>Have coupon?</label>
-        <div class="input-group">
-            <input type="text" class="form-control" name="coupon" placeholder="Coupon code"/>
-            <span class="input-group-append">
-                <button type="submit" class="btn btn-primary">Apply</button>
-            </span>
-        </div>
+              </a>
+              <a href="{% url 'remove_cart' cart_item.uid %}" class="btn btn-light">Remove</a>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
     </div>
-    {% if cart.coupon %}
-    <a href="{% url 'remove_coupon' cart.uid %}" class="btn btn-success">{{ cart.coupon.coupon_code }}</a>
-    {% endif %}
-</form>
-</div>
-<!-- card-body.// -->
-</div>
-<!-- card .// -->
-<div class="card">
-<div class="card-body">
-    <dl class="dlist-align">
-        <dt>Total price:</dt>
-        <dd class="text-right">
-            USD {{ cart_total|floatformat:2 }}
-        </dd>
-    </dl>
-    
-    
-<dl class="dlist-align">
-    <dt>Discount:</dt>
-    <dd class="text-right">USD 658</dd>
-</dl>
-<dl class="dlist-align">
-    <dt>Total:</dt>
-    <dd class="text-right h5">
-        <strong>${{ user_cart.get_cart_total }}</strong>
-    </dd>
-</dl>
-<hr />
-<p class="text-center mb-3">
-    <img src="images/misc/payments.png" height="26" />
-</p>
-</div>
-<!-- card-body.// -->
-</div>
-<!-- card .// -->
-</aside>
-<!-- col.// -->
-</div>
-</div>
-<!-- container .//  -->
-
+    <!-- col-md-9.// -->
+    <aside class="col-md-3">
+      <div class="card">
+        <div class="card-body">
+          <form method="POST">
+            {% csrf_token %}
+            {% include 'base/alert.html' %}
+            <div class="form-group">
+              <label>Have a coupon?</label>
+              <div class="input-group">
+                <input type="text" class="form-control" name="coupon" placeholder="Coupon code"/>
+                <span class="input-group-append">
+                  <button type="submit" class="btn btn-primary">Apply</button>
+                </span>
+              </div>
+            </div>
+          </form>
+          {% if cart.coupon %}
+          <div class="text-center">
+            <a href="{% url 'remove_coupon' cart.uid %}" class="btn btn-success">Remove Coupon</a>
+          </div>
+          {% endif %}
+        </div>
+         <!-- card-body.// -->
+      </div> <!-- card .// -->
+      <div class="card">
+        <div class="card-body">
+          <dl class="dlist-align">
+            <dt>Total price:</dt>
+            <dd class="text-right">
+              INR {{ cart_total|floatformat:2 }}
+            </dd>
+          </dl>
+          <dl class="dlist-align">
+            <dt>Discount:</dt>
+            <dd class="text-right">{{ cart.coupon.coupon_code }}</dd>
+          </dl>
+          <dl class="dlist-align">
+            <dt>Total:</dt>
+            <dd class="text-right h5">
+              <strong>₹ {{ user_cart.get_cart_total }}</strong>
+            </dd>
+          </dl>
+          <hr/>
+          <p class="text-center mb-3">
+            <img src="images/misc/payments.png" height="26"/>
+          </p>
+        </div> <!-- card-body.// -->
+      </div> <!-- card .// -->
+    </aside> <!-- col.// -->
+  </div> <!-- row.// -->
+</div> <!-- container.// -->
 {% endblock %}
