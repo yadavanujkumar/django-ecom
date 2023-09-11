@@ -166,7 +166,7 @@ EMAIL_HOST_PASSWORD = 'eddfpecaxcodoqfo'
 
 
 
-razor_pay_key_id = 'rzp_test_3SfQEcPJrZXAk3'
-key_secret = 'WUU1PdtLCWSUYNGquUXRcOtP'
+razor_pay_key_id = ''
+key_secret = ''
 
 ############################
