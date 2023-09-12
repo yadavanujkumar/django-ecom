@@ -11,6 +11,8 @@ from django.core.exceptions import ObjectDoesNotExist
 import razorpay
 from products.models import *
 # Create your views here.
+from django.http import JsonResponse
+
 
 def login_page(request):
     
@@ -49,6 +51,7 @@ def logout(request, *args, **kwargs):
     except Exception as e:
         print(e)
     return redirect('login')
+
 
 
 def register_page(request):
@@ -122,10 +125,12 @@ def remove_cart(request , cart_item_uid):
 from django.conf import settings
 
 def cart(request):
+    user_cart= None
     try:
         user_cart = Cart.objects.get(is_paid=False, user=request.user)
-    except ObjectDoesNotExist:
+    except Exception as e:
         # If no cart matching the conditions is found, create an empty cart.
+        print(e)
         user_cart = None
     
     cart_total = user_cart.get_cart_total() if user_cart else 0  # Calculate the total or set it to 0 if cart is None
@@ -156,14 +161,16 @@ def cart(request):
 
         messages.success(request, 'Coupon used ')
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-
-    client = razorpay.Client(auth=(settings.KEY , settings.SECERET))
-    payment = client.order.create ({'amount' : user_cart.get_cart_total(), 'currency' : 'INR' , 'payment_capture' : 1 })
-    user_cart.razor_pay_order_id = payment['id']
-    user_cart.save()
-    print("*****")
-    print(payment)
-    print("****")
+    if user_cart:
+        client = razorpay.Client(auth=(settings.KEY , settings.SECERET))
+        payment = client.order.create({'amount' : user_cart.get_cart_total() *100, 'currency' : 'INR' , 'payment_capture' : 1 })
+        user_cart.razor_pay_order_id = payment['id']
+        user_cart.save()
+        print("*****")
+        print(payment)
+        print("****")
+        
+        
     context = {'user_cart': user_cart, 'payment' : payment}
     return render(request, 'accounts/cart.html', context)
 
@@ -175,3 +182,9 @@ def remove_coupon(request, cart_id):
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
+def success(request):
+    order_id = request.GET.get('order_id')
+    cart = Cart.objects.get(razor_pay_order_id = order_id)
+    cart.is_paid = True;
+    cart.save()
+    return HttpResponse('Payment Success')
