@@ -75,12 +75,11 @@
                 </span>
               </div>
             </div>
+           {% if cart.coupon %}
+            <a href="{% url 'remove_coupon' cart.uid %}" class="btn btn-success" >{{cart.coupon.coupon_code}}</a>
+           {% endif %}
           </form>
-          {% if cart.coupon %}
-          <div class="text-center">
-            <a href="{% url 'remove_coupon' cart.uid %}" class="btn btn-success">Remove Coupon</a>
-          </div>
-          {% endif %}
+          
         </div>
          <!-- card-body.// -->
       </div> <!-- card .// -->

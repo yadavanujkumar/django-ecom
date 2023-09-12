@@ -72,3 +72,5 @@ def  send_email_token(sender , instance , created , **kwargs):
 
     except Exception as e:
         print(e)
+
+

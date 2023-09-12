@@ -11,7 +11,6 @@ from django.core.exceptions import ObjectDoesNotExist
 
 from products.models import *
 # Create your views here.
-from .models import Profile
 
 
 def login_page(request):
@@ -133,8 +132,6 @@ def cart(request):
         coupon =  request.POST.get('coupon')
         coupon_obj = Coupon.objects.filter(coupon_code__icontains=coupon)
         
-
-
         if not coupon_obj.exists():
             messages.warning(request, 'Invalid Coupon brooo')
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
@@ -143,9 +140,9 @@ def cart(request):
             messages.warning(request, 'Coupon already exists brooooo ')
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
-        if user_cart.get_cart_total() < coupon_obj.minimum_amount:
-            messages.warning(request, f'Amount should be greater than  {coupon_obj.minimum_amount}')
-            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+        if user_cart.get_cart_total() > coupon_obj[0].minimum_amount:
+             messages.warning(request, f'Amount should be greater than  {coupon_obj[0].minimum_amount}')
+             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
         if coupon_obj[0].is_expired:
             messages.warning(request, 'Coupon experied ')
@@ -168,3 +165,5 @@ def remove_coupon(request, cart_id):
     cart.save()
     messages.success(request, 'Coupon Removed ')
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
