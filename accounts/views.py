@@ -12,7 +12,6 @@ from django.core.exceptions import ObjectDoesNotExist
 from products.models import *
 # Create your views here.
 
-
 def login_page(request):
     
     if request.method == 'POST':
