@@ -8,7 +8,7 @@ from django.http import HttpResponseRedirect,HttpResponse
 from accounts.models import Cart, CartItems 
 #from products.models import minimum_amount, is_expired
 from django.core.exceptions import ObjectDoesNotExist
-
+import razorpay
 from products.models import *
 # Create your views here.
 
@@ -119,6 +119,8 @@ def remove_cart(request , cart_item_uid):
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
+from django.conf import settings
+
 def cart(request):
     try:
         user_cart = Cart.objects.get(is_paid=False, user=request.user)
@@ -155,7 +157,14 @@ def cart(request):
         messages.success(request, 'Coupon used ')
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
-    context = {'user_cart': user_cart, 'cart_total': cart_total}
+    client = razorpay.Client(auth=(settings.KEY , settings.SECERET))
+    payment = client.order.create ({'amount' : user_cart.get_cart_total(), 'currency' : 'INR' , 'payment_capture' : 1 })
+    user_cart.razor_pay_order_id = payment['id']
+    user_cart.save()
+    print("*****")
+    print(payment)
+    print("****")
+    context = {'user_cart': user_cart, 'payment' : payment}
     return render(request, 'accounts/cart.html', context)
 
 def remove_coupon(request, cart_id):
