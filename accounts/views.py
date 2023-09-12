@@ -163,14 +163,15 @@ def cart(request):
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     if user_cart:
         client = razorpay.Client(auth=(settings.KEY , settings.SECERET))
-        payment = client.order.create({'amount' : user_cart.get_cart_total() *100, 'currency' : 'INR' , 'payment_capture' : 1 })
+        payment = client.order.create({'amount' : user_cart.get_cart_total() *1000, 'currency' : 'INR' , 'payment_capture' : 1 })
         user_cart.razor_pay_order_id = payment['id']
         user_cart.save()
         print("*****")
         print(payment)
         print("****")
-        
-        
+
+    payment = None
+
     context = {'user_cart': user_cart, 'payment' : payment}
     return render(request, 'accounts/cart.html', context)
 
@@ -188,3 +189,4 @@ def success(request):
     cart.is_paid = True;
     cart.save()
     return HttpResponse('Payment Success')
+
