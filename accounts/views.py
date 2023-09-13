@@ -205,8 +205,23 @@ def success(request):
     return HttpResponse('Payment Success')
 
 from django.shortcuts import render, get_object_or_404
-#from .models import Bill
 
-# def generate_bill(request, bill_id):
-#     bill = get_object_or_404(Bill, id=bill_id)
-#     return render(request, 'bill_template.html', {'bill': bill})
+
+from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
+from .models import CartItems
+
+@login_required
+def order_history(request):
+    try:
+        # Get all paid carts associated with the user
+        user_carts = CartItems.objects.filter(cart__user=request.user, cart__is_paid=True)
+        
+        context = {
+            'ordered_items': user_carts,
+        }
+        return render(request, 'accounts/order_history.html', context)
+    except CartItems.DoesNotExist:
+        # Handle the case where the user's cart items don't exist or are not paid
+        return render(request, 'accounts/order_history.html', {})
+

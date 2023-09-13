@@ -14,5 +14,7 @@ urlpatterns = [
    path('remove-coupon/<cart_id>/' , remove_coupon , name = "remove_coupon"),
    path('success/' , success , name = "success"),
    
+   path('order_history/', order_history, name='order_history'),
+
    
 ]

@@ -1,0 +1,25 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+  <h2>Order History</h2>
+  <table class="table table-hover">
+    <thead>
+      <tr>
+        <th>Product</th>
+        <th>Price</th>
+        <!-- Add more columns as needed -->
+      </tr>
+    </thead>
+    <tbody>
+      {% for ordered_item in ordered_items %}
+      <tr>
+        <td>{{ ordered_item.product.product_name }}</td>
+        <td>₹{{ ordered_item.get_product_price }}</td>
+        <!-- Add more columns as needed -->
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

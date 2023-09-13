@@ -79,29 +79,16 @@ def  send_email_token(sender , instance , created , **kwargs):
         print(e)
 
 
-from django.db import models
-from django.contrib.auth.models import User
-from django.db.models.signals import post_save
-from django.dispatch import receiver
-
-# class Bill(models.Model):
-#     user = models.ForeignKey(User, on_delete=models.CASCADE)
-#     cart = models.ForeignKey(Cart, on_delete=models.CASCADE)  # Assuming you have an Order model
-#     payment_id = models.CharField(max_length=100)
-#     # Add other bill-related fields as needed
+# from django.db import models
+# from django.contrib.auth.models import User
+# from products.models import Product
 
 # class Order(models.Model):
 #     user = models.ForeignKey(User, on_delete=models.CASCADE)
 #     date_ordered = models.DateTimeField(auto_now_add=True)
 #     is_paid = models.BooleanField(default=False)
+#     order_items = models.ManyToManyField(CartItems)  # This field stores the order items
 
-# from .models import Cart  # Import the Cart model from the correct module
+#     def __str__(self):
+#         return f"Order {self.pk} by {self.user.username}"
 
-# class Cart(BaseModel):
-#     user = models.ForeignKey(User, on_delete=models.CASCADE)
-#     order = models.ForeignKey(Order, on_delete=models.SET_NULL, null=True, blank=True)
-#     coupon = models.ForeignKey(Coupon, on_delete=models.SET_NULL, null=True, blank=True)
-#     is_paid = models.BooleanField(default=False)
-#     razor_pay_order_id = models.CharField(max_length=100, null=True, blank=True)
-#     razor_pay_payment_id = models.CharField(max_length=100, null=True, blank=True)
-#     razor_pay_payment_signature = models.CharField(max_length=100, null=True, blank=True)
