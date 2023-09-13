@@ -219,20 +219,21 @@ def order_history(request):
         
         context = {
             'ordered_items': user_carts,
+            'user_cart': user_carts.first().cart if user_carts.exists() else None,  # Get the first cart in case of multiple orders
         }
         return render(request, 'accounts/order_history.html', context)
     except CartItems.DoesNotExist:
         # Handle the case where the user's cart items don't exist or are not paid
         return render(request, 'accounts/order_history.html', {})
 
-from django.http import HttpResponse
+""" from django.http import HttpResponse
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import letter
-from io import BytesIO
+from io import BytesIO """
 
 # views.py
 
-from django.http import FileResponse
+""" from django.http import FileResponse
 from reportlab.pdfgen import canvas
 from django.shortcuts import get_object_or_404
 from django.template.loader import render_to_string
@@ -242,7 +243,7 @@ from .models import Cart
 
 def generate_bill_pdf(request, order_id):
     # Get the cart object based on the cart_id
-    cart = get_object_or_404(Cart, id=cart_id)
+    cart = get_object_or_404(Cart, id=order_id_id)
 
     # Create a BytesIO buffer to receive the PDF data
     buffer = BytesIO()
@@ -283,3 +284,4 @@ def generate_bill_pdf(request, order_id):
     buffer.seek(0)
     return FileResponse(buffer, as_attachment=True, filename=f'cart_bill_{cart.id}.pdf')
 
+ """
