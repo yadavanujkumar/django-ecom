@@ -225,3 +225,61 @@ def order_history(request):
         # Handle the case where the user's cart items don't exist or are not paid
         return render(request, 'accounts/order_history.html', {})
 
+from django.http import HttpResponse
+from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import letter
+from io import BytesIO
+
+# views.py
+
+from django.http import FileResponse
+from reportlab.pdfgen import canvas
+from django.shortcuts import get_object_or_404
+from django.template.loader import render_to_string
+from io import BytesIO
+from django.shortcuts import render
+from .models import Cart
+
+def generate_bill_pdf(request, order_id):
+    # Get the cart object based on the cart_id
+    cart = get_object_or_404(Cart, id=cart_id)
+
+    # Create a BytesIO buffer to receive the PDF data
+    buffer = BytesIO()
+
+    # Create the PDF object, using the BytesIO buffer as its "file."
+    p = canvas.Canvas(buffer)
+
+    # Start writing the PDF here
+    p.setFont("Helvetica", 12)
+    p.drawString(100, 800, "Invoice for Cart")
+    p.drawString(100, 780, f"Cart ID: {cart.id}")
+    p.drawString(100, 760, f"User: {cart.user.username}")
+    p.drawString(100, 740, f"Date Ordered: {cart.date_ordered.strftime('%Y-%m-%d %H:%M:%S')}")
+
+    # Calculate and display the total price
+    total_price = cart.get_cart_total()
+    p.drawString(100, 720, f"Total Price: ₹{total_price:.2f}")
+
+    # List cart items
+    y_position = 700
+    for item in cart.cart_items.all():
+        product_name = item.product.product_name
+        product_price = item.get_product_price()
+        quantity = item.quantity
+
+        p.drawString(100, y_position, f"Product: {product_name}")
+        p.drawString(300, y_position, f"Price: ₹{product_price:.2f}")
+        p.drawString(400, y_position, f"Quantity: {quantity}")
+        
+        y_position -= 20
+
+    # Close the PDF object cleanly, and we're done.
+    p.showPage()
+    p.save()
+
+    # FileResponse sets the Content-Disposition header so that browsers
+    # present the option to save the file.
+    buffer.seek(0)
+    return FileResponse(buffer, as_attachment=True, filename=f'cart_bill_{cart.id}.pdf')
+

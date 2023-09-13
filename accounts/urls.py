@@ -16,5 +16,6 @@ urlpatterns = [
    
    path('order_history/', order_history, name='order_history'),
 
-   
+   path('generate_bill/<int:order_id>/', generate_bill_pdf, name='generate_bill_pdf'),
+
 ]
