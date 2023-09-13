@@ -6,6 +6,7 @@ from accounts.views import *
 urlpatterns = [
    path('login/' , login_page , name="login" ),
    path('logout/',logout, name="logout"),
+   path('aboutus/', about_us, name="about_us"),
    path('register/' , register_page , name="register"),
    path('activate/<email_token>/' , activate_email , name="activate_email"),
    path('cart/' , cart , name="cart"),

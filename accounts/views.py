@@ -53,6 +53,11 @@ def logout(request, *args, **kwargs):
 
 
 
+def about_us(request):
+    # Your view logic here
+    return render(request, 'about_us.html')
+
+
 def register_page(request):
 
     if request.method == 'POST':
