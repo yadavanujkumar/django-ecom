@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Order Bill</title>
+</head>
+<body>
+    <h1>Order Bill</h1>
+    <p>Order ID: {{ bill.order.id }}</p>
+    <p>Payment ID: {{ bill.payment_id }}</p>
+    <!-- Add more bill details as needed -->
+
+    <h2>Order Items</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Product</th>
+                <th>Quantity</th>
+                <th>Price</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for order_item in bill.order.orderitem_set.all %}
+            <tr>
+                <td>{{ order_item.product.product_name }}</td>
+                <td>{{ order_item.quantity }}</td>
+                <td>${{ order_item.price }}</td>
+                <td>${{ order_item.quantity * order_item.price }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <h2>Total Amount: ${{ bill.order.total_amount }}</h2>
+</body>
+</html>

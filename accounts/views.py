@@ -5,13 +5,12 @@ from django.contrib import messages
 from django.contrib.auth.models import User, auth
 from django.contrib.auth import authenticate , login , logout
 from django.http import HttpResponseRedirect,HttpResponse
-from accounts.models import Cart, CartItems 
+from accounts.models import *
 #from products.models import minimum_amount, is_expired
 from django.core.exceptions import ObjectDoesNotExist
 import razorpay
 from products.models import *
 # Create your views here.
-from django.http import JsonResponse
 
 
 def login_page(request):
@@ -82,14 +81,27 @@ def register_page(request):
 
 
 
-def activate_email(request , email_token):
+from django.http import HttpResponse  # Import HttpResponse for error response
+
+from .models import Profile  # Import the Profile model
+
+# Your other imports and views
+
+def activate_email(request, email_token):
     try:
-        user = Profile.objects.get(email_token= email_token)
+        # The rest of your code remains the same
+        user = Profile.objects.get(email_token=email_token)
         user.is_email_verified = True
         user.save()
         return redirect('/')
-    except Exception as e:
+    except Profile.DoesNotExist:
+        print("Profile with email_token does not exist.")
         return HttpResponse('Invalid Email token')
+    except Exception as e:
+        print("Error:", e)
+        return HttpResponse('An error occurred during activation.')
+  # Return an error message
+
 
 def add_to_cart(request, uid):
     try:
@@ -125,13 +137,12 @@ def remove_cart(request , cart_item_uid):
 from django.conf import settings
 
 def cart(request):
-    user_cart= None
+    user_cart = None
     try:
         user_cart = Cart.objects.get(is_paid=False, user=request.user)
     except Exception as e:
         # If no cart matching the conditions is found, create an empty cart.
         print(e)
-        user_cart = None
     
     cart_total = user_cart.get_cart_total() if user_cart else 0  # Calculate the total or set it to 0 if cart is None
     if request.method == 'POST':
@@ -163,14 +174,15 @@ def cart(request):
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     if user_cart:
         client = razorpay.Client(auth=(settings.KEY , settings.SECERET))
-        payment = client.order.create({'amount' : user_cart.get_cart_total() *1000, 'currency' : 'INR' , 'payment_capture' : 1 })
+        payment = client.order.create({'amount' : user_cart.get_cart_total() *100, 'currency' : 'INR' , 'payment_capture' : 1 })
+
         user_cart.razor_pay_order_id = payment['id']
         user_cart.save()
         print("*****")
         print(payment)
         print("****")
 
-    payment = None
+   # payment = None
 
     context = {'user_cart': user_cart, 'payment' : payment}
     return render(request, 'accounts/cart.html', context)
@@ -188,5 +200,13 @@ def success(request):
     cart = Cart.objects.get(razor_pay_order_id = order_id)
     cart.is_paid = True;
     cart.save()
+
+    
     return HttpResponse('Payment Success')
 
+from django.shortcuts import render, get_object_or_404
+#from .models import Bill
+
+# def generate_bill(request, bill_id):
+#     bill = get_object_or_404(Bill, id=bill_id)
+#     return render(request, 'bill_template.html', {'bill': bill})
