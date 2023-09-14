@@ -1,61 +1,84 @@
-{% extends "base/base.html"%}
+{% extends "base/base.html" %}
 
-{%  block start %}
-<!-- <style>
-    #preloader
-    {
-    background: #000 url(./public/static/images/gif) no-repeat center center ;
-	background-size: 20%;
-	height: 100vh;
-	width: 100%;
-	position: fixed;
-	z-index:100;
+{% block start %}
+<style>
+    /* Add your custom styles for index.html here */
 
-    
+    /* Product Cards */
+    .card-product-grid {
+        border: 1px solid #eee;
+        margin-bottom: 20px;
+        transition: transform 0.3s ease-in-out;
     }
-    .notLoaded {
-        height: 100vh;
+
+    .card-product-grid:hover {
+        transform: scale(1.05);
+    }
+
+    .card-product-grid .img-wrap {
         overflow: hidden;
-        position: fixed;
-        margin: 0px;
+        position: relative;
+        height: 250px;
     }
-   /* # .container mt-5 pt-5{
-        background-image: url({}"/public/static/images/bg.jpeg");
-    } */
-    </style>
- -->
-<div class="container mt-5 pt-5" >
+
+    .card-product-grid img {
+        max-width: 100%;
+        height: auto;
+        transition: transform 0.3s ease-in-out;
+    }
+
+    .card-product-grid:hover img {
+        transform: scale(1.1);
+    }
+
+    .card-product-grid .info-wrap {
+        padding: 10px;
+    }
+
+    .card-product-grid .title {
+        font-weight: bold;
+        color: #333;
+        text-decoration: none;
+        transition: color 0.3s ease-in-out;
+    }
+
+    .card-product-grid .title:hover {
+        color: #17a2b8;
+    }
+
+    .card-product-grid .price {
+        color: #17a2b8;
+        font-size: 18px;
+        margin-top: 10px;
+    }
+
+    /* Responsive Styles */
+    @media (max-width: 768px) {
+        .card-product-grid {
+            flex-basis: calc(50% - 10px);
+        }
+    }
+</style>
+
+<!-- Your content goes here -->
+
+<div class="container mt-5 pt-5">
     <div class="row">
-        
         {% for product in products %}
         <div class="col-md-3">
             <figure class="card card-product-grid">
-                <div class="img-wrap"> <img src="/media/{{product.product_images.first.image}}"> </div>
+                <div class="img-wrap">
+                    <img src="/media/{{product.product_images.first.image}}">
+                </div>
                 <figcaption class="info-wrap border-top">
                     <a href="{% url 'get_product' product.slug %}" class="title">
-                        <b>{{product.product_name}}</b></a>
-                    <div class="price mt-2">₹{{product.price}}</div> <!-- price-wrap.// -->
+                        <b>{{product.product_name}}</b>
+                    </a>
+                    <div class="price mt-2">₹{{product.price}}</div>
                 </figcaption>
-            </figure> <!-- card // -->
-        </div> <!-- col.// -->
-       <!--  <script>
-            function fadeout(){
-                $('#loader').delay(100000).fadeOut('slow'),function(){$('.notLoaded' ) .removeClass('notLoaded');
-            }
-        }
-            var loader= document.getElementById("preloader");
-            window.addEventListener("load", function() {
-            loader.style.display = "none";
-            })
-            </script> -->
-
+            </figure>
+        </div>
         {% endfor %}
-      
-        
-       
     </div>
-
-    </div>
-
-
+</div>
 {% endblock %}
