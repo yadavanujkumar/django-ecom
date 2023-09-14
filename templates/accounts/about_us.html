@@ -1,110 +1,111 @@
 {% extends 'base/base.html' %}
-
+{% load static %}
 
 {% block start %}
-
 <html lang="en">
-    
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About Us - Your E-commerce Store</title>
-   
+    <title>About Us - The Shoe Emporium</title>
     <style>
         body {
-    font-family: Arial, sans-serif;
-    background-color: #f5f5f5;
-    margin: 0;
-    padding: 0;
-}
+            font-family: Arial, sans-serif;
+            background-color: #121212; /* Dark background color */
+            color: #fff; /* White text color */
+            margin: 0;
+            padding: 0;
+        }
 
-.container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px;
-}
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
 
-/* Header Styles */
-header {
-    background-color: #333;
-    color: #fff;
-    padding: 10px 0;
-    text-align: center;
-}
+        /* Header Styles */
+        header {
+            background-color: #222; /* Darker header background color */
+            color: #fff;
+            padding: 10px 0;
+            text-align: center;
+        }
 
-/* Section Styles */
-.about-us {
-    background-color: #fff;
-    padding: 30px;
-    margin: 20px 0;
-    border-radius: 5px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-}
+        /* Section Styles */
+        .about-us {
+            background-color: #333; /* Darker section background color */
+            padding: 30px;
+            margin: 20px 0;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
 
-.about-us h1 {
-    font-size: 32px;
-    margin-bottom: 20px;
-}
+        .about-us h1 {
+            font-size: 32px;
+            margin-bottom: 20px;
+            color: #fff; /* White text color */
+        }
 
-.about-us h2 {
-    font-size: 24px;
-    margin-top: 20px;
-    margin-bottom: 10px;
-}
+        .about-us h2 {
+            font-size: 24px;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            color: #fff; /* White text color */
+        }
 
-.about-us p {
-    font-size: 16px;
-    line-height: 1.6;
-}
+        .about-us p {
+            font-size: 16px;
+            line-height: 1.6;
+        }
 
-/* CEO Photo Styles */
-.ceo-photo {
-    width: 200px;
-    height: 200px;
-    border-radius: 50%;
-    margin-top: 20px;
-    animation: rotateCEO 5s linear infinite;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-}
+        /* CEO Photo Styles */
+        .ceo-photo {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            margin: 20px auto; /* Center the CEO photo */
+            animation: rotateCEO 5s linear infinite;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
 
-@keyframes rotateCEO {
-    0% {
-        transform: rotate(0deg);
-    }
-    100% {
-        transform: rotate(360deg);
-    }
-}
+        @keyframes rotateCEO {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
 
-/* Footer Styles */
-footer {
-    background-color: #333;
-    color: #fff;
-    padding: 10px 0;
-    text-align: center;
-}
+        /* Footer Styles */
+        footer {
+            background-color: #222; /* Darker footer background color */
+            color: #fff;
+            padding: 10px 0;
+            text-align: center;
+        }
 
-/* Responsive Design */
-@media (max-width: 768px) {
-    .container {
-        padding: 10px;
-    }
-    
-    .about-us {
-        padding: 20px;
-    }
-    
-    .ceo-photo {
-        width: 150px;
-        height: 150px;
-    }
-}
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+
+            .about-us {
+                padding: 20px;
+            }
+
+            .ceo-photo {
+                width: 150px;
+                height: 150px;
+            }
+        }
     </style>
 </head>
 <body>
     <header>
+        <!-- Add a header content here if needed -->
     </header>
-
+   
     <section class="about-us">
         <h1>About Us - The Shoe Emporium</h1>
         <p>At The Shoe Emporium, we believe that every step matters. We are not just a shoe store; we are your go-to destination for all things footwear. Our journey began with a passion for delivering quality shoes that combine style, comfort, and affordability.</p>
@@ -126,14 +127,16 @@ footer {
         <h2>Shop with Confidence</h2>
         <p>When you shop at The Shoe Emporium, you're not just buying shoes; you're investing in quality, comfort, and style. We take pride in being a part of your journey, one step at a time.</p>
 
+        <div class="ceo-photo">
+            <link rel="shortcut icon" type="image/x-icon" href="{% static 'images/ceo.jpg' %}">
+        </div>
+
         <p>Thank you for choosing The Shoe Emporium. We look forward to being a part of your stylish and comfortable footwear journey.</p>
     </section>
 
     <footer>
         <p>&copy; 2023 Your E-commerce Store</p>
     </footer>
-    {% endblock %}   
 </body>
-
 </html>
-
+{% endblock %}

@@ -1,6 +1,60 @@
 {% extends 'base/base.html' %}  
 
 {% block start %}
+<style>
+  /* Style the table */
+  table.table-hover.shopping-cart-wrap {
+      background-color: #fff; /* White background color */
+      margin-top: 20px;
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  }
+
+  /* Style table headings */
+  table.table-hover.shopping-cart-wrap thead th {
+      background-color: #333; /* Dark background color */
+      color: #fff; /* White text color */
+  }
+
+  /* Style table rows */
+  table.table-hover.shopping-cart-wrap tbody tr {
+      border-bottom: 1px solid #ddd; /* Gray border between rows */
+  }
+
+  /* Style product images */
+  table.table-hover.shopping-cart-wrap .img-wrap img {
+      max-width: 100px; /* Limit the image size */
+  }
+
+  /* Style product titles */
+  table.table-hover.shopping-cart-wrap .media-body h6.title {
+      font-size: 16px;
+      color: #333; /* Dark text color */
+  }
+
+  /* Style product details */
+  table.table-hover.shopping-cart-wrap .media-body dl.small dt {
+      font-weight: bold;
+  }
+
+  /* Style product prices */
+  table.table-hover.shopping-cart-wrap .price-wrap var.price {
+      font-size: 16px;
+      color: #333; /* Dark text color */
+      font-weight: bold;
+  }
+
+  /* Style action buttons */
+  table.table-hover.shopping-cart-wrap .text-right a.btn.btn-light {
+      color: #333; /* Dark text color */
+      border-color: #333; /* Dark border color */
+  }
+
+  table.table-hover.shopping-cart-wrap .text-right a.btn.btn-light:hover {
+      background-color: #333; /* Dark background color on hover */
+      color: #fff; /* White text color on hover */
+  }
+</style> 
 <div class="container">
   <div class="row">
     <div class="col-md-9">
@@ -27,7 +81,7 @@
                   </dl>
                   <dl class="dlist-align small">
                     <dt>Brand:</dt>
-                    <dd>{{ cart_item.product.brand }}</dd>
+                    <dd>{{ cart_item.product.name }}</dd>
                   </dl>
                   {% endif %}
                 </figcaption>
@@ -41,9 +95,7 @@
               </div> <!-- price-wrap .// -->
             </td>
             <td class="text-right">
-              <a data-original-title="Save to Wishlist" title="" href="" class="btn btn-light" data-toggle="tooltip">
-                <i class="fa fa-heart"></i>
-              </a>
+             
               <a href="{% url 'remove_cart' cart_item.uid %}" class="btn btn-light">Remove</a>
             </td>
           </tr>
