@@ -68,7 +68,6 @@ def register_page(request):
         last_name = request.POST.get('last_name')
         email = request.POST.get('email')
         password = request.POST.get('password')
-        phone = request.POST.get('phone')
         first_line = request.POST.get('first_line')
         second_line = request.POST.get('second_line')
         zip_code = request.POST.get('zip_code')
