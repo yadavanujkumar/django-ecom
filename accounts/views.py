@@ -3,7 +3,7 @@ from tkinter import E
 from django.shortcuts import redirect, render
 from django.contrib import messages
 from django.contrib.auth.models import User, auth
-from django.contrib.auth import authenticate , login , logout
+from django.contrib.auth import authenticate , login , logout 
 from django.http import HttpResponseRedirect,HttpResponse
 from accounts.models import *
 #from products.models import minimum_amount, is_expired
@@ -19,6 +19,8 @@ def login_page(request):
     if request.method == 'POST':
         email = request.POST.get('email')
         password = request.POST.get('password')
+        
+
         user_obj = User.objects.filter(username = email)
 
         if not user_obj.exists():
@@ -66,6 +68,14 @@ def register_page(request):
         last_name = request.POST.get('last_name')
         email = request.POST.get('email')
         password = request.POST.get('password')
+        phone = request.POST.get('phone')
+        first_line = request.POST.get('first_line')
+        second_line = request.POST.get('second_line')
+        zip_code = request.POST.get('zip_code')
+        city = request.POST.get('city')
+        state = request.POST.get('state')
+
+
         user_obj = User.objects.filter(username = email)
 
         if user_obj.exists():
@@ -77,6 +87,12 @@ def register_page(request):
         user_obj = User.objects.create(first_name = first_name , last_name= last_name , email = email , username = email)
         user_obj.set_password(password)
         user_obj.save()
+
+        address_form = AddressForm(request.POST)
+        if address_form.is_valid():
+            address = address_form.save(commit=False)
+            address.user = user_obj
+            address.save()
 
         messages.success(request, 'An email has been sent on your mail.')
         return HttpResponseRedirect(request.path_info)
@@ -199,12 +215,26 @@ def remove_coupon(request, cart_id):
 
 def success(request):
     order_id = request.GET.get('order_id')
-    cart = Cart.objects.get(razor_pay_order_id = order_id)
-    cart.is_paid = True;
+    cart = Cart.objects.get(razor_pay_order_id=order_id)
+    cart.is_paid = True
     cart.save()
 
-    
-    return HttpResponse('Payment Success')
+    # Retrieve the user's address
+    user_address = None
+    try:
+        user_address = Address.objects.get(user=request.user)
+    except Address.DoesNotExist:
+        pass  # Handle the case where the user's address doesn't exist
+
+    response_text = "Payment Successful"
+
+    if user_address:
+        response_text += f"<br><br>Your items will be delivered to the following address:<br><br>"
+        response_text += f"{user_address.first_line}<br>"
+        response_text += f"{user_address.second_line}<br>"
+        response_text += f"{user_address.city}, {user_address.state} {user_address.zip_code}<br>"
+
+    return HttpResponse(response_text)
 
 from django.shortcuts import render, get_object_or_404
 
@@ -287,3 +317,23 @@ def generate_bill_pdf(request, order_id):
     return FileResponse(buffer, as_attachment=True, filename=f'cart_bill_{cart.id}.pdf')
 
  """
+
+
+@login_required
+def user_details(request):
+    user = request.user
+    return render(request, 'accounts/user_details.html', {'user': user})
+
+def contact_us(request):
+    if request.method == 'POST':
+        form = ContactMessageForm(request.POST)
+        if form.is_valid():
+            message = form.save(commit=False)
+            message.user = request.user if request.user.is_authenticated else None
+            message.save()
+            messages.success(request, 'Your message has been sent!')
+            return redirect('contact_us')
+    else:
+        form = ContactMessageForm()
+    
+    return render(request, 'accounts/contact_us.html', {'form': form})

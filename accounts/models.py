@@ -7,6 +7,7 @@ from django.dispatch import receiver
 import uuid
 from base.emails import send_account_activation_email
 from products.models import *
+from django import forms
 
 
 class Profile(BaseModel):
@@ -18,6 +19,36 @@ class Profile(BaseModel):
     def get_cart_count(self):
         return CartItems.objects.filter(cart__is_paid = False , cart__user = self.user).count()
 
+class Address(BaseModel):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='address')
+    first_line = models.CharField(max_length=50, null=True, blank=True, default='')
+    second_line = models.CharField(max_length=50, null=True, blank=True)
+    zip_code = models.CharField(max_length=10, null=True, blank=True)
+    city = models.CharField(max_length=20, null=True, blank=True)
+    state = models.CharField(max_length=20, null=True, blank=True)
+
+    def __str__(self):
+        return f"Address for {self.user.username}"
+
+
+class AddressForm(forms.ModelForm):
+    class Meta:
+        model = Address
+        fields = ['first_line', 'second_line', 'zip_code', 'city', 'state']
+
+class ContactMessage(BaseModel):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='contact_messages')
+    subject = models.CharField(max_length=255)
+    message = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Contact Message from {self.user.username}"
+
+class ContactMessageForm(forms.ModelForm):
+    class Meta:
+        model = ContactMessage
+        fields = ['subject', 'message']
 
 class Cart(BaseModel):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='carts')
@@ -78,17 +109,4 @@ def  send_email_token(sender , instance , created , **kwargs):
     except Exception as e:
         print(e)
 
-
-# from django.db import models
-# from django.contrib.auth.models import User
-# from products.models import Product
-
-# class Order(models.Model):
-#     user = models.ForeignKey(User, on_delete=models.CASCADE)
-#     date_ordered = models.DateTimeField(auto_now_add=True)
-#     is_paid = models.BooleanField(default=False)
-#     order_items = models.ManyToManyField(CartItems)  # This field stores the order items
-
-#     def __str__(self):
-#         return f"Order {self.pk} by {self.user.username}"
 
