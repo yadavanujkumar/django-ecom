@@ -12,7 +12,9 @@ import razorpay
 from products.models import *
 # Create your views here.
 from ecom.settings import *
+from django.http import HttpResponse  
 
+from .models import Profile 
 
 def login_page(request):
     
@@ -102,11 +104,7 @@ def register_page(request):
 
 
 
-from django.http import HttpResponse  # Import HttpResponse for error response
-
-from .models import Profile  # Import the Profile model
-
-# Your other imports and views
+ 
 
 def activate_email(request, email_token):
     try:
@@ -156,7 +154,9 @@ def remove_cart(request , cart_item_uid):
 
 
 from django.conf import settings
+from django.contrib.auth.decorators import login_required
 
+@login_required
 def cart(request):
     user_cart = None
     try:
