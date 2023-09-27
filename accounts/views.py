@@ -143,6 +143,10 @@ def add_to_cart(request, uid):
         print(e)
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
+
+
+
+
 def remove_cart(request , cart_item_uid):
     try:
          cart_item = CartItems.objects.get(uid= cart_item_uid)
@@ -212,6 +216,12 @@ def remove_coupon(request, cart_id):
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
+from django.shortcuts import render, redirect
+from django.http import HttpResponse
+from .models import Cart
+from django.urls import reverse
+
+
 def success(request):
     order_id = request.GET.get('order_id')
     cart = Cart.objects.get(razor_pay_order_id=order_id)
@@ -232,6 +242,9 @@ def success(request):
         response_text += f"{user_address.first_line}<br>"
         response_text += f"{user_address.second_line}<br>"
         response_text += f"{user_address.city}, {user_address.state} {user_address.zip_code}<br>"
+
+    # Add a link to download the bill
+    response_text += f'<br><a href="{reverse("generate_bill", args=[order_id, cart.razor_pay_payment_id])}">Download Bill</a>'
 
     return HttpResponse(response_text)
 
@@ -276,3 +289,86 @@ def contact_us(request):
         form = ContactMessageForm()
     
     return render(request, 'accounts/contact_us.html', {'form': form})
+
+
+# In your views.py
+
+from django.http import HttpResponse
+from reportlab.lib.pagesizes import letter
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle
+from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.lib import colors
+
+def generate_bill(request, order_id, payment_id):
+    # Get user's address
+    try:
+        user_address = Address.objects.get(user=request.user)
+    except Address.DoesNotExist:
+        user_address = None
+
+    # Get the authenticated user's name
+    user_name = request.user.get_full_name()
+
+    # Create a response object
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename="bill_{order_id}.pdf"'
+
+    # Create a PDF document
+    doc = SimpleDocTemplate(response, pagesize=letter)
+    elements = []
+
+    # Define styles for the PDF content
+    styles = getSampleStyleSheet()
+    normal_style = styles['Normal']
+    heading_style = styles['Heading1']
+
+    # Add a title to the PDF
+    elements.append(Paragraph("Order Bill", heading_style))
+    elements.append(Spacer(1, 12))
+
+    # Add a thank you message
+    thank_you_text = f"Thank you, {user_name}, for your order!"
+    elements.append(Paragraph(thank_you_text, normal_style))
+    elements.append(Spacer(1, 12))
+
+    # Add user's address
+    if user_address:
+        address_text = f"Your items will be delivered to the following address:\n{user_address.first_line}, {user_address.second_line}, {user_address.city}, {user_address.state}, {user_address.zip_code}"
+        elements.append(Paragraph(address_text, normal_style))
+        elements.append(Spacer(1, 12))
+
+    # Create a list of ordered items for the table
+    ordered_items = CartItems.objects.filter(cart__razor_pay_order_id=order_id)
+    item_data = [["Item", "Price"]]
+    for cart_item in ordered_items:
+        item_data.append([cart_item.product.product_name, f"RS: {cart_item.product.price}"])
+
+    # Create the table and set its style
+    item_table = Table(item_data, colWidths=[300, 100])
+    item_table.setStyle(TableStyle([
+        ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+        ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
+        ('GRID', (0, 0), (-1, -1), 1, colors.black),
+    ]))
+
+    # Add the table to the PDF elements
+    elements.append(Paragraph("Ordered Items:", heading_style))
+    elements.append(Spacer(1, 12))
+    elements.append(item_table)
+
+    # Add order ID and payment ID
+    order_payment_text = f"Order ID: {order_id}"
+    elements.append(Paragraph(order_payment_text, normal_style))
+
+    # Add delivery information
+    delivery_info = "Your items will be delivered in 1-2 weeks."
+    elements.append(Paragraph(delivery_info, normal_style))
+
+    # Build the PDF document
+    doc.build(elements)
+
+    return response

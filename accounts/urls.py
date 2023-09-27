@@ -12,6 +12,7 @@ urlpatterns = [
    path('activate/<email_token>/' , activate_email , name="activate_email"),
    path('cart/' , cart , name="cart"),
    path('add-to-cart/<uid>/' , add_to_cart, name = "add_to_cart"),
+
    path('remove-cart/<cart_item_uid>' , remove_cart , name = "remove_cart"),
    path('remove-coupon/<cart_id>/' , remove_coupon , name = "remove_coupon"),
    path('success/' , success , name = "success"),
@@ -22,5 +23,8 @@ urlpatterns = [
    path('password_reset/done/', auth_views.PasswordResetDoneView.as_view(), name='password_reset_done'),
    path('reset/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
    path('reset/done/', auth_views.PasswordResetCompleteView.as_view(), name='password_reset_complete'),
+
+   path('generate_bill/<str:order_id>/<str:payment_id>/', generate_bill, name='generate_bill'),
+
 
 ]

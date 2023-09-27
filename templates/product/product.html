@@ -98,7 +98,7 @@
               </div>
               {% endif %}
             </div>
-            <a href="#" class="btn btn-primary">Buy now</a>
+            <a href="{% url 'add_to_cart' product.uid %}?variant={{selected_size}}" class="btn btn-primary">Buy now</a>
             <a href="{% url 'add_to_cart' product.uid %}?variant={{selected_size}}" class="btn btn-outline-primary">
               <span class="text">Add to cart</span>
               <i class="fas fa-shopping-cart"></i>
