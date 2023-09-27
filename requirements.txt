@@ -1,0 +1,9 @@
+install following:
+
+Django
+
+pillow
+
+razorpay
+
+reportlab
