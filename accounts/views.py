@@ -1,20 +1,26 @@
 from cmath import log
 from tkinter import E
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect, render , get_object_or_404
 from django.contrib import messages
 from django.contrib.auth.models import User, auth
 from django.contrib.auth import authenticate , login , logout 
 from django.http import HttpResponseRedirect,HttpResponse
 from accounts.models import *
-#from products.models import minimum_amount, is_expired
 from django.core.exceptions import ObjectDoesNotExist
 import razorpay
 from products.models import *
-# Create your views here.
 from ecom.settings import *
-from django.http import HttpResponse  
+from django.urls import reverse
 
-from .models import Profile 
+from reportlab.lib.pagesizes import letter
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle
+from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.lib import colors
+from django.contrib.auth.decorators import login_required
+
+from django.conf import settings
+
+
 
 def login_page(request):
     
@@ -157,8 +163,6 @@ def remove_cart(request , cart_item_uid):
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
-from django.conf import settings
-from django.contrib.auth.decorators import login_required
 
 @login_required
 def cart(request):
@@ -216,10 +220,6 @@ def remove_coupon(request, cart_id):
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
-from django.shortcuts import render, redirect
-from django.http import HttpResponse
-from .models import Cart
-from django.urls import reverse
 
 
 def success(request):
@@ -248,17 +248,12 @@ def success(request):
 
     return HttpResponse(response_text)
 
-from django.shortcuts import render, get_object_or_404
 
-
-from django.shortcuts import render
-from django.contrib.auth.decorators import login_required
-from .models import CartItems
 
 @login_required
 def order_history(request):
     try:
-        # Get all paid carts associated with the user
+        #  all paid carts associated with the user
         user_carts = CartItems.objects.filter(cart__user=request.user, cart__is_paid=True)
         
         context = {
@@ -291,14 +286,6 @@ def contact_us(request):
     return render(request, 'accounts/contact_us.html', {'form': form})
 
 
-# In your views.py
-
-from django.http import HttpResponse
-from reportlab.lib.pagesizes import letter
-from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle
-from reportlab.lib.styles import getSampleStyleSheet
-from reportlab.lib import colors
-
 def generate_bill(request, order_id, payment_id):
     # Get user's address
     try:
@@ -306,44 +293,44 @@ def generate_bill(request, order_id, payment_id):
     except Address.DoesNotExist:
         user_address = None
 
-    # Get the authenticated user's name
+    #  authenticated user's name
     user_name = request.user.get_full_name()
 
-    # Create a response object
+    #  response object
     response = HttpResponse(content_type='application/pdf')
     response['Content-Disposition'] = f'attachment; filename="bill_{order_id}.pdf"'
 
-    # Create a PDF document
+    #  PDF document
     doc = SimpleDocTemplate(response, pagesize=letter)
     elements = []
 
-    # Define styles for the PDF content
+    # styles for the PDF content
     styles = getSampleStyleSheet()
     normal_style = styles['Normal']
     heading_style = styles['Heading1']
 
-    # Add a title to the PDF
+    #  title  PDF
     elements.append(Paragraph("Order Bill", heading_style))
     elements.append(Spacer(1, 12))
 
-    # Add a thank you message
+    #  thank you message
     thank_you_text = f"Thank you, {user_name}, for your order!"
     elements.append(Paragraph(thank_you_text, normal_style))
     elements.append(Spacer(1, 12))
 
-    # Add user's address
+    #  user's address
     if user_address:
         address_text = f"Your items will be delivered to the following address:\n{user_address.first_line}, {user_address.second_line}, {user_address.city}, {user_address.state}, {user_address.zip_code}"
         elements.append(Paragraph(address_text, normal_style))
         elements.append(Spacer(1, 12))
 
-    # Create a list of ordered items for the table
+    #  a list of ordered items for the table
     ordered_items = CartItems.objects.filter(cart__razor_pay_order_id=order_id)
     item_data = [["Item", "Price"]]
     for cart_item in ordered_items:
         item_data.append([cart_item.product.product_name, f"RS: {cart_item.product.price}"])
 
-    # Create the table and set its style
+    # table and  its style
     item_table = Table(item_data, colWidths=[300, 100])
     item_table.setStyle(TableStyle([
         ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
@@ -355,12 +342,12 @@ def generate_bill(request, order_id, payment_id):
         ('GRID', (0, 0), (-1, -1), 1, colors.black),
     ]))
 
-    # Add the table to the PDF elements
+    #  table to the PDF elements
     elements.append(Paragraph("Ordered Items:", heading_style))
     elements.append(Spacer(1, 12))
     elements.append(item_table)
 
-    # Add order ID and payment ID
+    # order ID 
     order_payment_text = f"Order ID: {order_id}"
     elements.append(Paragraph(order_payment_text, normal_style))
 
@@ -368,7 +355,7 @@ def generate_bill(request, order_id, payment_id):
     delivery_info = "Your items will be delivered in 1-2 weeks."
     elements.append(Paragraph(delivery_info, normal_style))
 
-    # Build the PDF document
+    #  PDF document
     doc.build(elements)
 
     return response
