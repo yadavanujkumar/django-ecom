@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from products.models import Product, SizeVariant  # Import SizeVariant
+from django.http import HttpResponseRedirect
 
 
 def get_product(request, slug):
@@ -18,4 +19,6 @@ def get_product(request, slug):
         # Handle other exceptions or errors here
         print(e)
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+from django.db.models import Q
 
