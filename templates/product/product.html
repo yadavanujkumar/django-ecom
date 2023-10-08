@@ -63,17 +63,17 @@
             </div> 
             <p>{{product.product_desription}}</p>
             <dl class="row">
-              <dt class="col-sm-3">Model :{{product.product_name}}</dt>
-              <dd class="col-sm-9">Odsy-1000</dd>
-              <dt class="col-sm-3">Color</dt>
-              <dd class="col-sm-9">Brown</dd>
+              <dt class="col-sm-3">Model :</dt>
+              <dd class="col-sm-9">{{product.product_name}}</dd>
+              <!-- <dt class="col-sm-3">Color</dt>
+              <dd class="col-sm-9">Brown</dd> -->
               <dt class="col-sm-3">Delivery</dt>
               <dd class="col-sm-9">Mumbai-central, Nerul, and Dharavi</dd>
             </dl>
             <hr />
             <div class="form-row">
               <div class="form-group col-md flex-grow-0">
-                <label>Quantity</label>
+               <!--  <label>Quantity</label>
                 <div class="input-group mb-3 input-spinner">
                   <div class="input-group-prepend">
                     <button class="btn btn-light" type="button" id="button-plus">+</button>
@@ -82,7 +82,7 @@
                   <div class="input-group-append">
                     <button class="btn btn-light" type="button" id="button-minus">-</button>
                   </div>
-                </div>
+                </div> -->
               </div>
               {% if product.size_variant.count %}
               <div class="form-group col-md">
